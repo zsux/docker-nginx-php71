@@ -14,11 +14,11 @@
     
     docker build -t pt_nginx_php_fpm_prod_1:latest . && docker images | grep pt_nginx_php_fpm_prod_1
 
-    docker run -it registry.cn-shanghai.aliyuncs.com/pt/nginx-php71 \
+    docker run -it eagle2019/nginx-php71 \
         bash -c "boot.py --init='ls -al' --boot='nginx,php-fpm,shell,sshd'"
 
 
-	registry.cn-shanghai.aliyuncs.com/pt/nginx-php71:[镜像版本号]
+	eagle2019/nginx-php71:[镜像版本号]
 
                 
 # docker-nginx-php71
