@@ -24,5 +24,5 @@
 # tag
 	
 	git tag
-	git tag -a version-1.1 -m 'my version 1.1' 
-	git push origin version-1.1
+	git tag -a v1.1 -m 'my version 1.1' 
+	git push origin v1.1
