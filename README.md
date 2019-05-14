@@ -21,4 +21,8 @@
 	eagle2019/nginx-php71:[镜像版本号]
 
                 
-# docker-nginx-php71
+# tag
+	
+	git tag
+	git tag -a version-1.1 -m 'my version 1.1' 
+	git push origin version-1.1
