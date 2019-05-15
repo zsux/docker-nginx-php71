@@ -3,7 +3,8 @@ import argparse
 import os
 import sys
 import logging
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG,format='%(asctime)s : %(message)s')
 
 parser = argparse.ArgumentParser(description='DOCKER BOOT')
 parser.add_argument('--start', help='start', default="0")
@@ -33,10 +34,15 @@ run = args.run
 
 logging.info("booting...,%s",args)
 
-def os_system(cmd):
+def os_system(cmd,info = 1):
     cmd = cmd.strip('"').strip(",")
-    logging.info( "> exec: %s",cmd)
-    os.system(cmd)
+    msg = "> exec: {}".format(cmd)
+    if info == 1:
+        logging.info(msg)
+    error = os.system(cmd)
+    logging.info("run result: {}".format(error))
+    if error > 0:
+        sys.exit(1)
 
 os_system("id")
 os_system("pwd")
@@ -49,11 +55,11 @@ def do_init_user():
             t = key.split("_")
             username = t[0]
             public_key = os.getenv(env_key,None)
-            print( ">> do_init_user: {0}@{1}".format(username,public_key))
+            logging.info( ">> do_init_user: {0}@{1}".format(username,public_key))
             if public_key is None:
                 continue
             if username == "root":
-                print("ignore root")
+                logging.info("ignore root")
             elif username == "www":
                 os_system("sudo echo {0} >> /home/www/.ssh/authorized_keys".format(public_key))
             else:
@@ -82,8 +88,6 @@ if len(init) > 0:
 if len(after_init) > 0:
     os_system(after_init)
 
-if len(init_user) > 0:
-    do_init_user()
 
 for item in boot.split(","):
     if len(item) == 0:
@@ -119,6 +123,8 @@ for env_key in os.environ:
         logging.info( ">> htpasswd: {0}@{1}".format(username,password))
         if password is not None:
             os_system("sudo touch {2} && sudo chmod 777 {2} && echo {0}:{1} >> {2}".format(username,password,"/etc/nginx/.htpasswd"))
+            
+do_init_user()
 
 if start == '1':
     logging.info("starting")
